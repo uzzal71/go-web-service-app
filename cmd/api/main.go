@@ -1,21 +1,51 @@
-package main 
+package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
+	"os"
+	"time"
+	"flag"
 )
 
-func main(){
-	http.HandleFunc("/v1/healthcheck", healthcheck)
+const version = "10.0"
 
-	err := http.ListenAndServe(":4000", nil)
-	if err != nil {
-		fmt.Println(err)
-	}
+type config struct {
+	port int
+	env  string
 }
 
-func healthcheck(w http.ResponseWriter, r *http.Request){
-	fmt.Fprintf(w, "status: available \n")
-	fmt.Fprintf(w, "environment: %s\n", "dev")
-	fmt.Fprintf(w, "verstion: %s\n", "1.0.0")
+type application struct {
+	config config
+	logger *log.Logger
+}
+
+func main() {
+	var cfg config
+
+	flag.IntVar(&cfg.port, "port", 4000, "API server port")
+	flag.StringVar(&cfg.env, "env", "dev", "Environment (dev|stage|prod)") // Use StringVar here
+	flag.Parse()
+
+	logger := log.New(os.Stdout, "", log.Ldate|log.Ltime)
+
+	app := &application{
+		config: cfg,
+		logger: logger,
+	}
+
+	addr := fmt.Sprintf(":%d", cfg.port)
+
+	srv := &http.Server{
+		Addr:         addr,
+		Handler:      app.route(),
+		IdleTimeout:  time.Minute,
+		ReadTimeout:  10 * time.Second,
+		WriteTimeout: 30 * time.Second,
+	}
+
+	logger.Printf("starting %s server on %s", cfg.env, addr)
+	err := srv.ListenAndServe()
+	logger.Fatal(err)
 }
