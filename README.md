@@ -1,2 +1,2 @@
-# go-web-service-app
+# Create a go web application
 Building Go Web Services and Applications
