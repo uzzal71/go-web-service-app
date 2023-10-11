@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"strconv",
+	"strconv"
 	"encoding/json"
 )
 
@@ -16,14 +16,19 @@ func (app *application) healthcheck(w http.ResponseWriter, r *http.Request){
 	data := map[string]string{
 		"status": "available",
 		"environment": app.config.env,
-		"version": version
+		"version": version,
 	}
 
 	js, err := json.Marshal(data)
 
-	fmt.Fprintf(w, "status: available \n")
-	fmt.Fprintf(w, "environment: %s\n", app.config.env)
-	fmt.Fprintf(w, "verstion: %s\n", version)
+	if err != nil {
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
+	}
+
+	js = append(js, '\n')
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(js)
 }
 
 func (app *application) getCreateBooksHandler(w http.ResponseWriter, r *http.Request) {
