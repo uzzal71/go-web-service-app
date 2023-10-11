@@ -3,7 +3,8 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"strconv"
+	"strconv",
+	"encoding/json"
 )
 
 func (app *application) healthcheck(w http.ResponseWriter, r *http.Request){
