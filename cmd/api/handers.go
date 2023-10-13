@@ -9,6 +9,7 @@ import (
 	"readinglist.uzzal.io/internal/data"
 )
 
+
 func (app *application) healthcheck(w http.ResponseWriter, r *http.Request){
 	if r.Method != http.MethodGet {
 		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
