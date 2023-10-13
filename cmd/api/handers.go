@@ -66,6 +66,7 @@ func (app *application) getCreateBooksHandler(w http.ResponseWriter, r *http.Req
 		js = append(js, '\n')
 		w.Header().Set("Content-Type", "application/json")
 		w.Write(js)
+		return
 	}
 
 	if r.Method == http.MethodPost {
