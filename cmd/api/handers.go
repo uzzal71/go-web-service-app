@@ -69,6 +69,7 @@ func (app *application) getBook(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Bad Request", http.StatusBadRequest)
 		return
 	}
+
 	book := data.Book{
 		ID: idInt,
 		CreatedAt: time.Now(),
@@ -79,13 +80,16 @@ func (app *application) getBook(w http.ResponseWriter, r *http.Request) {
 		Rating: 4.5,
 		Version: 1,
 	}
+
 	js, err := json.Marshal(book)
+	
 	if err _= nil {
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 	}
 
 	js = append(js, '\n')
-	fmt.Fprintf(w, "Display the details of book with ID: %d", idInt)
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(js)
 }
 
 func (app *application) updateBook(w http.ResponseWriter, r *http.Request) {
