@@ -5,8 +5,8 @@ import (
 	"net/http"
 )
 
-func (app *application) writeJSON(s http.ResponseWriter, status int, data any) error {
-	js, err := json.MarshalIndent(data, "", \t"")
+func (app *application) writeJSON(w http.ResponseWriter, status int, data any) error {
+	js, err := json.MarshalIndent(data, "", "\t")
 	if err != nil {
 		return err
 	}
