@@ -5,7 +5,7 @@ import (
 )
 
 type Book struct {
-	ID int64
+	ID int64	`json:"id"`
 	CreatedAt time.Time
 	Title string 
 	Published int 
