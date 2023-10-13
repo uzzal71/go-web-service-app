@@ -79,7 +79,12 @@ func (app *application) getBook(w http.ResponseWriter, r *http.Request) {
 		Rating: 4.5,
 		Version: 1,
 	}
-	js, err := json.Marshal(book),
+	js, err := json.Marshal(book)
+	if err _= nil {
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+	}
+
+	js = append(js, '\n')
 	fmt.Fprintf(w, "Display the details of book with ID: %d", idInt)
 }
 
