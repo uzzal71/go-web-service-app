@@ -112,7 +112,7 @@ func (app *application) getBook(w http.ResponseWriter, r *http.Request) {
 		Version: 1,
 	}
 
-	js, err := json.Marshal(book)
+	js, err := json.MarshalIndent(book, "", "\t")
 
 	if err != nil {
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
