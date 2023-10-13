@@ -105,16 +105,11 @@ func (app *application) getBook(w http.ResponseWriter, r *http.Request) {
 		Rating: 4.5,
 		Version: 1,
 	}
-
-	js, err := json.MarshalIndent(book, "", "\t")
-
-	if err != nil {
+	
+	if err := app.writeJSON(w, http.StatusOk, book); err != nil {
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
 	}
-
-	js = append(js, '\n')
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(js)
 }
 
 func (app *application) updateBook(w http.ResponseWriter, r *http.Request) {
