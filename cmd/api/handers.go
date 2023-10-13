@@ -66,9 +66,20 @@ func (app *application) getBook(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Path[len("/v1/books/"):]
 	idInt, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
-		http.Error(w, "Bad Request", http.StatusBadRequest) // Use http.StatusBadRequest for a 400 Bad Request response
+		http.Error(w, "Bad Request", http.StatusBadRequest)
 		return
 	}
+	book := data.Book{
+		ID: idInt,
+		CreatedAt: time.Now(),
+		Title: "Echoes in the Darkness",
+		Published: 2019,
+		Pages: 300,
+		Genres: []string{"Fiction", "Thriller"},
+		Rating: 4.5,
+		Version: 1,
+	}
+	js, err := json.Marshal(book),
 	fmt.Fprintf(w, "Display the details of book with ID: %d", idInt)
 }
 
