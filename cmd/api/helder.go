@@ -6,5 +6,16 @@ import (
 )
 
 func (app *application) writeJSON(s http.ResponseWriter, status int, data any) error {
-	
+	js, err := json.MarshalIndent(data, "", \t"")
+	if err != nil {
+		return err
+	}
+
+	js = append(js, '\n')
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(status)
+	w.Write(js)
+
+	return nil
 }
