@@ -1,8 +1,11 @@
 package main 
 
 /*
-BODY='{"title": "The Black Soulston", "published":2001,"pages":107, "genres":["Fiction", "Mystery"], "rating":305}'
+BODY='{"title": "The Black Soulston", "published":2001,"pages":107, "genres":["Fiction", "Mystery"], "rating":4.5}'
 url -i -d "$BODY" localhost:4000/v1/books
+BODY='{"title": "The Black Soulston", "published":2001,"pages":107, "genres":["Fiction", "Mystery"], "rating":3.5}'
+curl -X PUT -d  "$BODY" localhost:4000/v1/books/12
+{123 2023-10-14 01:08:20.669677485 +0600 +06 m=+3.199003110 The Black Soulston 2001 107 [Fiction Mystery] 3.5 1} 1 means true
 */
 import (
 	"fmt"
@@ -10,7 +13,6 @@ import (
 	"strconv"
 	"encoding/json"
 	"time"
-	"io/ioutil"
 	"readinglist.uzzal.io/internal/data"
 )
 
@@ -79,13 +81,7 @@ func (app *application) getCreateBooksHandler(w http.ResponseWriter, r *http.Req
 			Rating   float32  `json:"rating"`
 		}
 
-		body, err := ioutil.ReadAll(r.Body)
-		if err != nil {
-			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
-			return
-		}
-
-		err = json.Unmarshal(body, &input)
+		err := app.readJSON(w, r, &input)
 		if err != nil {
 			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 			return
@@ -161,13 +157,7 @@ func (app *application) updateBook(w http.ResponseWriter, r *http.Request) {
 		Version: 1,
 	}
 
-	body, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
-		return
-	}
-
-	err = json.Unmarshal(body, &input)
+	err = app.readJSON(w, r, &input)
 	if err != nil {
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
@@ -186,14 +176,14 @@ func (app *application) updateBook(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if len(input.Genres) > 0 {
-		book.Genres = *input.Genres
+		book.Genres = input.Genres
 	}
 
 	if input.Rating != nil {
 		book.Rating = *input.Rating
 	}
 
-	fmt.Fprintf(w, "%v\n", input)
+	fmt.Fprintf(w, "%v\n", book)
 }
 
 func (app *application) deleteBook(w http.ResponseWriter, r *http.Request) {
