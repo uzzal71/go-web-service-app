@@ -36,8 +36,26 @@ func (app *application) healthcheck(w http.ResponseWriter, r *http.Request){
 
 func (app *application) getCreateBooksHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
-		fmt.Fprintf(w, "Display a list of the books on the reading list\n")
-		return
+		books := []data.Book{
+			{
+				ID:			1,
+				CreatedAt:	time.Now(),
+				Title:		"The Darkening of Tristram",
+				Published:	1998,
+				Generes:	[]string{"Fiction", "Thriller"},
+				Rating:		4.5,
+				Version:	1,
+			},
+			{
+				ID:			2,
+				CreatedAt:	time.Now(),
+				Title:		"The Legecy of Deckar Cain",
+				Published:	2007,
+				Generes:	[]string{"Fiction", "Adventure"},
+				Rating:		4.9,
+				Version:	1,
+			}
+		}
 	}
 
 	if r.Method == http.MethodPost {
@@ -82,7 +100,7 @@ func (app *application) getBook(w http.ResponseWriter, r *http.Request) {
 	}
 
 	js, err := json.Marshal(book)
-	
+
 	if err _= nil {
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 	}
