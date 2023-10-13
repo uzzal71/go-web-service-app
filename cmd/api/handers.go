@@ -42,7 +42,8 @@ func (app *application) getCreateBooksHandler(w http.ResponseWriter, r *http.Req
 				CreatedAt:	time.Now(),
 				Title:		"The Darkening of Tristram",
 				Published:	1998,
-				Generes:	[]string{"Fiction", "Thriller"},
+				Pages:		300,
+				Genres:		[]string{"Fiction", "Thriller"},
 				Rating:		4.5,
 				Version:	1,
 			},
@@ -51,15 +52,16 @@ func (app *application) getCreateBooksHandler(w http.ResponseWriter, r *http.Req
 				CreatedAt:	time.Now(),
 				Title:		"The Legecy of Deckar Cain",
 				Published:	2007,
-				Generes:	[]string{"Fiction", "Adventure"},
+				Pages: 		532,
+				Genres:		[]string{"Fiction", "Adventure"},
 				Rating:		4.9,
 				Version:	1,
-			}
+			},
 		}
 
 		js, err := json.Marshal(books)
 		if err != nil{
-			http.Error(http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 			return
 		}
 
@@ -112,7 +114,7 @@ func (app *application) getBook(w http.ResponseWriter, r *http.Request) {
 
 	js, err := json.Marshal(book)
 
-	if err _= nil {
+	if err != nil {
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 	}
 
