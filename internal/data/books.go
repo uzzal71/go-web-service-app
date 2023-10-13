@@ -9,7 +9,7 @@ type Book struct {
 	CreatedAt time.Time `json:"-"`
 	Title string 		`json:"title"`
 	Published int 		`json:"published,omitempty"`
-	Pages int 			`json:"oages,omitempty"`	
+	Pages int 			`json:"pages,omitempty"`	
 	Genres []string		`json:"genres,omitempty"`
 	Rating float32		`json:"raring,omitempty"`
 	Version int32		`json:"-"`

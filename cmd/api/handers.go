@@ -66,8 +66,13 @@ func (app *application) getCreateBooksHandler(w http.ResponseWriter, r *http.Req
 	}
 
 	if r.Method == http.MethodPost {
-		fmt.Fprintf(w, "Added a new book to the reading list\n")
-		return
+		var input struct {
+			Title string 		`json:"title"`
+			Published int 		`json:"published"`
+			Pages int 			`json:"pages"`	
+			Genres []string		`json:"genres"`
+			Rating float32		`json:"raring"`
+		}
 	}
 }
 
