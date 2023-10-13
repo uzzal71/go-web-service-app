@@ -59,7 +59,7 @@ func (app *application) getCreateBooksHandler(w http.ResponseWriter, r *http.Req
 			},
 		}
 
-		js, err := json.Marshal(books)
+		js, err := json.MarshalIndent(books, "", "\t")
 		if err != nil{
 			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 			return
