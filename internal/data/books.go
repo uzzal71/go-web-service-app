@@ -1,7 +1,10 @@
 package data
 
 import (
+	"database/sql"
+	"errors"
 	"time"
+	"github.com/lib/pq"
 )
 
 type Book struct {
@@ -13,4 +16,8 @@ type Book struct {
 	Genres []string		`json:"genres,omitempty"`
 	Rating float32		`json:"raring,omitempty"`
 	Version int32		`json:"-"`
+}
+
+type MokModel struct {
+	DB *sql.DB
 }
