@@ -8,6 +8,8 @@ import (
 	"os"
 	"time"
 	"flag"
+
+	_ "github.com/lib/pq"
 )
 
 const version = "10.0"
@@ -15,6 +17,7 @@ const version = "10.0"
 type config struct {
 	port int
 	env  string
+	dsn string
 }
 
 type application struct {
