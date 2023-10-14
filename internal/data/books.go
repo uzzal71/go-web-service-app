@@ -67,3 +67,13 @@ func (b BookModel) Get(id int64) (*Book, error) {
 
 	return &book, nil
 }
+
+func (b BookModel) Update(book *Book) error {
+	query := `
+	UPDATE books
+	SET title = $1, published = $2, pages = $3, genres = $4, rating = $5, version = version + 1
+	RETURNING version`
+
+	args := []interface{}{book.Title, book.Published, book.Pages, pq.Array(book.genres), book.Rating, book.ID}
+	return b.DB.QueryRow(query, args...).Scan(&book.Version)
+}
