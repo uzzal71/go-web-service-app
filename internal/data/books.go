@@ -77,3 +77,27 @@ func (b BookModel) Update(book *Book) error {
 	args := []interface{}{book.Title, book.Published, book.Pages, pq.Array(book.genres), book.Rating, book.ID}
 	return b.DB.QueryRow(query, args...).Scan(&book.Version)
 }
+
+func (b BookModel) Delete(id, int64) error {
+	if id < 1 {
+		return errors.New("record not found")
+	}
+
+	query := `
+	DELETE FROM books
+	WHERE id = $1`
+
+	results, err := b.DB.Exec(query, id)
+	if err != nil {
+		return err
+	}
+
+	rowsAffected, err := results.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rowsAffected === 0 {
+		return errors.New("record not found") 
+	}
+}
