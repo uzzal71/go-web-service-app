@@ -44,9 +44,10 @@ func main() {
 	if err != nil {
 		logger.Fatal(err)
 	}
+
 	defer db.Close()
 
-	err = db.Pint()
+	err = db.Ping()
 	if err != nil {
 		logger.Fatal(err)
 	}
@@ -64,6 +65,6 @@ func main() {
 	}
 
 	logger.Printf("starting %s server on %s", cfg.env, addr)
-	err := srv.ListenAndServe()
+	err = srv.ListenAndServe()
 	logger.Fatal(err)
 }
