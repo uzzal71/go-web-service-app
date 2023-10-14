@@ -32,3 +32,38 @@ func (b BookModel) Insert(book *Book) error {
 	// return the auto generated system values to Go object
 	return b.DB.QueryRow(query, args...).Scan(&book.ID, &book.CreatedAt, &book.Version)
 }
+
+func (b BookModel) Get(id int64) (*Book, error) {
+	if id < 1 {
+		return nil, errors.New("record not found")
+	}
+
+	query := `
+	SELECT id, created_at, title, published, pages, genres, rating, version
+	FROM books
+	WHERE id = $1`
+
+	var book Book
+
+	err := b.DB.QueryRow(query, id).Scan(
+		&book.ID,
+		&book.CreatedAt,
+		&book.Title,
+		&book.Published,
+		&book.Pages,
+		pq.Array(&book.Genres),
+		&book.Rating,
+		&book.Version,
+	)
+
+	if err != nil {
+		switch  {
+		case errors.Is(err, sql.ErrNoRows):
+			return nil, errors.New("record not found")
+		default:
+			return nil, err
+		}
+	}
+
+	return &book, nil
+}
