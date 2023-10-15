@@ -70,6 +70,16 @@ func (app *application) getCreateBooksHandler(w http.ResponseWriter, r *http.Req
 			return
 		}
 
+		book := &data.Book {
+			Title:		input.Title,
+			Published:	input.Published,
+			Pages:		input.Pages,
+			Genres:		input.Genres,
+			Rating:		input.Rating,
+		}
+
+		err = app.models.Books.Insert(book)
+
 		fmt.Fprintf(w, "%v\n", input)
 	}
 }
