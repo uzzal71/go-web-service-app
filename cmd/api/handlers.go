@@ -118,17 +118,17 @@ func (app *application) getBook(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	book := data.Book{
-		ID: idInt,
-		CreatedAt: time.Now(),
-		Title: "Echoes in the Darkness",
-		Published: 2019,
-		Pages: 300,
-		Genres: []string{"Fiction", "Thriller"},
-		Rating: 4.5,
-		Version: 1,
+	book, err := app.models.Books.Get(idInt)
+	if err != nil {
+		switch {
+		case errors.is(err, errors.New("record not found")):
+			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+		default:
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		}
+		return
 	}
-	
+
 	if err := app.writeJSON(w, http.StatusOK, envelope{"book": book}); err != nil {
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
