@@ -79,6 +79,16 @@ func (app *application) getCreateBooksHandler(w http.ResponseWriter, r *http.Req
 		}
 
 		err = app.models.Books.Insert(book)
+		if err != nil {
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+			return
+		}
+
+		headers := make(http.Header)
+		headers.Set("Location", fmt.Sprintf("v1/books/%d", book.ID))
+
+		// Write the JSON response with a 201 Created status code and the Location header set.
+		err = app.writeJSON(w, http.StatusCreated, envelope{"books": books}, headers);
 
 		fmt.Fprintf(w, "%v\n", input)
 	}
