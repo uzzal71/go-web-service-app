@@ -194,6 +194,11 @@ func (app *application) updateBook(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
+
+	if err := app.writeJSON(w, http.StatusOK, envelope{"book": book}); err != nil {
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
+	}
 }
 
 func (app *application) deleteBook(w http.ResponseWriter, r *http.Request) {
@@ -203,5 +208,21 @@ func (app *application) deleteBook(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Bad Request", http.StatusBadRequest) // Use http.StatusBadRequest for a 400 Bad Request response
 		return
 	}
-	fmt.Fprintf(w, "Delete a book with ID: %d", idInt)
+
+	book, err := app.models.Books.Delete(idInt)
+	if err != nil {
+		switch {
+		case errors.is(err, errors.New("record not found")):
+			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+		default:
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		}
+		return
+	}
+
+	err = app.writeJSON(w, http.StatusOK, envelope{"message": "book sucessfully deleted"}, nil)
+	if err != nil {
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
+	}
 }
