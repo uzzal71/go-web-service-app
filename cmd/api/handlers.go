@@ -142,6 +142,17 @@ func (app *application) updateBook(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Bad Request", http.StatusBadRequest) // Use http.StatusBadRequest for a 400 Bad Request response
 		return
 	}
+
+	book, err := app.models.Books.Get(idInt)
+	if err != nil {
+		switch {
+		case errors.is(err, errors.New("record not found")):
+			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+		default:
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		}
+		return
+	}
 	
 	var input struct {
 		Title    *string   `json:"title"`
@@ -151,16 +162,6 @@ func (app *application) updateBook(w http.ResponseWriter, r *http.Request) {
 		Rating   *float32  `json:"rating"`
 	}
 
-	book := data.Book{
-		ID: idInt,
-		CreatedAt: time.Now(),
-		Title: "Echoes in the Darkness",
-		Published: 2019,
-		Pages: 300,
-		Genres: []string{"Fiction", "Thriller"},
-		Rating: 4.5,
-		Version: 1,
-	}
 
 	err = app.readJSON(w, r, &input)
 	if err != nil {
@@ -188,7 +189,11 @@ func (app *application) updateBook(w http.ResponseWriter, r *http.Request) {
 		book.Rating = *input.Rating
 	}
 
-	fmt.Fprintf(w, "%v\n", book)
+	err = app.models.Books.Update(book)
+	if err != nil {
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
+	}
 }
 
 func (app *application) deleteBook(w http.ResponseWriter, r *http.Request) {
