@@ -8,32 +8,32 @@ import (
 )
 
 type Book struct {
-	ID        int64     `json:"id"`
+	ID int64			`json:"id"`
 	CreatedAt time.Time `json:"-"`
-	Title     string    `json:"title"`
-	Published int       `json:"published,omitempty"`
-	Pages     int       `json:"pages,omitempty"`
-	Genres    []string  `json:"genres,omitempty"`
-	Rating    float32   `json:"rating,omitempty"`
-	Version   int32     `json:"-"`
+	Title string 		`json:"title"`
+	Published int 		`json:"published,omitempty"`
+	Pages int 			`json:"pages,omitempty"`	
+	Genres []string		`json:"genres,omitempty"`
+	Rating float32		`json:"raring,omitempty"`
+	Version int32		`json:"-"`
 }
 
-type BookModel struct { // Corrected the struct name here
+type MokModel struct {
 	DB *sql.DB
 }
 
-func (b *BookModel) Insert(book *Book) error { // Corrected the receiver type here
+func (b BookModel) Insert(book *Book) error {
 	query := `
 	INSERT INTO books (title, published, pages, genres, rating)
 	VALUES ($1, $2, $3, $4, $5)
-	RETURNING id, created_at, version` // Corrected "RETURENING" to "RETURNING"
+	RETURENING id, crated_at, version`
 
-	args := []interface{}{book.Title, book.Published, book.Pages, pq.Array(book.Genres), book.Rating} // Corrected "geners" to "Genres"
-	// return the auto-generated system values to the Go object
+	args := []interface{}{book.Title, book.Published, book.Pages, pq.Array(book.genres), book.Rating}
+	// return the auto generated system values to Go object
 	return b.DB.QueryRow(query, args...).Scan(&book.ID, &book.CreatedAt, &book.Version)
 }
 
-func (b *BookModel) Get(id int64) (*Book, error) {
+func (b BookModel) Get(id int64) (*Book, error) {
 	if id < 1 {
 		return nil, errors.New("record not found")
 	}
@@ -57,7 +57,7 @@ func (b *BookModel) Get(id int64) (*Book, error) {
 	)
 
 	if err != nil {
-		switch {
+		switch  {
 		case errors.Is(err, sql.ErrNoRows):
 			return nil, errors.New("record not found")
 		default:
@@ -68,17 +68,17 @@ func (b *BookModel) Get(id int64) (*Book, error) {
 	return &book, nil
 }
 
-func (b *BookModel) Update(book *Book) error {
+func (b BookModel) Update(book *Book) error {
 	query := `
 	UPDATE books
 	SET title = $1, published = $2, pages = $3, genres = $4, rating = $5, version = version + 1
 	RETURNING version`
 
-	args := []interface{}{book.Title, book.Published, book.Pages, pq.Array(book.Genres), book.Rating, book.ID}
+	args := []interface{}{book.Title, book.Published, book.Pages, pq.Array(book.genres), book.Rating, book.ID}
 	return b.DB.QueryRow(query, args...).Scan(&book.Version)
 }
 
-func (b *BookModel) Delete(id int64) error { // Corrected the function signature here
+func (b BookModel) Delete(id, int64) error {
 	if id < 1 {
 		return errors.New("record not found")
 	}
@@ -97,16 +97,16 @@ func (b *BookModel) Delete(id int64) error { // Corrected the function signature
 		return err
 	}
 
-	if rowsAffected == 0 { // Corrected === to ==
-		return errors.New("record not found")
+	if rowsAffected === 0 {
+		return errors.New("record not found") 
 	}
 
 	return nil
 }
 
-func (b *BookModel) GetAll() ([]*Book, error) {
+func (b BookModel) GetAll() ([]*Book, error) {
 	query := `
-	SELECT *
+	SELECT * 
 	FROM books
 	ORDER BY id`
 
