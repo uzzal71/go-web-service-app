@@ -5,8 +5,8 @@ type Models struct {
 	Books BookModel
 }
 
-func newModels(db *sql.DB) Models {
+func NewModels(db *sql.DB) Models {
 	return Models{
-		Books: MookModel{DB: db},
+		Books: BookModel{DB: db},
 	}
 }

@@ -12,7 +12,7 @@ import (
 	"net/http"
 	"strconv"
 	"encoding/json"
-	"time"
+	"errors"
 	"readinglist.uzzal.io/internal/data"
 )
 
@@ -49,7 +49,7 @@ func (app *application) getCreateBooksHandler(w http.ResponseWriter, r *http.Req
 			return
 		}
 
-		if err := app.writeJSON(w, http.StatusOK, envelope{"books": books}); err != nil {
+		if err := app.writeJSON(w, http.StatusOK, envelope{"books": books}, nil); err != nil {
 			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 			return
 		}
@@ -88,7 +88,7 @@ func (app *application) getCreateBooksHandler(w http.ResponseWriter, r *http.Req
 		headers.Set("Location", fmt.Sprintf("v1/books/%d", book.ID))
 
 		// Write the JSON response with a 201 Created status code and the Location header set.
-		err = app.writeJSON(w, http.StatusCreated, envelope{"books": books}, headers);
+		err = app.writeJSON(w, http.StatusCreated, envelope{"book": book}, headers);
 		if err != nil {
 			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 			return
@@ -121,7 +121,7 @@ func (app *application) getBook(w http.ResponseWriter, r *http.Request) {
 	book, err := app.models.Books.Get(idInt)
 	if err != nil {
 		switch {
-		case errors.is(err, errors.New("record not found")):
+		case errors.Is(err, errors.New("record not found")):
 			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 		default:
 			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
@@ -129,7 +129,7 @@ func (app *application) getBook(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := app.writeJSON(w, http.StatusOK, envelope{"book": book}); err != nil {
+	if err := app.writeJSON(w, http.StatusOK, envelope{"book": book}, nil); err != nil {
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
@@ -146,7 +146,7 @@ func (app *application) updateBook(w http.ResponseWriter, r *http.Request) {
 	book, err := app.models.Books.Get(idInt)
 	if err != nil {
 		switch {
-		case errors.is(err, errors.New("record not found")):
+		case errors.Is(err, errors.New("record not found")):
 			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 		default:
 			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
@@ -195,7 +195,7 @@ func (app *application) updateBook(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := app.writeJSON(w, http.StatusOK, envelope{"book": book}); err != nil {
+	if err := app.writeJSON(w, http.StatusOK, envelope{"book": book}, nil); err != nil {
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
@@ -209,10 +209,10 @@ func (app *application) deleteBook(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	book, err := app.models.Books.Delete(idInt)
+	err = app.models.Books.Delete(idInt)
 	if err != nil {
 		switch {
-		case errors.is(err, errors.New("record not found")):
+		case errors.Is(err, errors.New("record not found")):
 			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 		default:
 			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
