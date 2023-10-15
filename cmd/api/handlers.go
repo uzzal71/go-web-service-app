@@ -43,7 +43,7 @@ func (app *application) healthcheck(w http.ResponseWriter, r *http.Request){
 
 func (app *application) getCreateBooksHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
-		books, err := app.models.Book.GetAll()
+		books, err := app.models.Books.GetAll()
 		if err != nil {
 			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 			return
@@ -205,7 +205,7 @@ func (app *application) deleteBook(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Path[len("/v1/books/"):]
 	idInt, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
-		http.Error(w, "Bad Request", http.StatusBadRequest) // Use http.StatusBadRequest for a 400 Bad Request response
+		http.Error(w, "Bad Request", http.StatusBadRequest)
 		return
 	}
 
