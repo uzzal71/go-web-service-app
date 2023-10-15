@@ -10,6 +10,7 @@ import (
 	"flag"
 
 	_ "github.com/lib/pq"
+	"readinglist.uzzal.io/internal/data"
 )
 
 const version = "10.0"
@@ -23,10 +24,12 @@ type config struct {
 type application struct {
 	config config
 	logger *log.Logger
+	models data.Models
 }
 
 func main() {
 	var cfg config
+	var db *sql.DB
 
 	flag.IntVar(&cfg.port, "port", 4000, "API server port")
 	flag.StringVar(&cfg.env, "env", "dev", "Environment (dev|stage|prod)") // Use StringVar here
@@ -34,11 +37,6 @@ func main() {
 	flag.Parse()
 
 	logger := log.New(os.Stdout, "", log.Ldate|log.Ltime)
-
-	app := &application{
-		config: cfg,
-		logger: logger,
-	}
 
 	db, err := sql.Open("postgres", cfg.dsn)
 	if err != nil {
@@ -53,6 +51,14 @@ func main() {
 	}
 
 	logger.Printf("database connection pool established")
+
+	models := data.NewModels(db) // Create and initialize the models
+
+	app := &application{
+		config: cfg,
+		logger: logger,
+		models: models,
+	}
 
 	addr := fmt.Sprintf(":%d", cfg.port)
 

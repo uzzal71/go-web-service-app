@@ -2,10 +2,17 @@ package main
 
 /*
 BODY='{"title": "The Black Soulston", "published":2001,"pages":107, "genres":["Fiction", "Mystery"], "rating":4.5}'
-url -i -d "$BODY" localhost:4000/v1/books
-BODY='{"title": "The Black Soulston", "published":2001,"pages":107, "genres":["Fiction", "Mystery"], "rating":3.5}'
-curl -X PUT -d  "$BODY" localhost:4000/v1/books/12
-{123 2023-10-14 01:08:20.669677485 +0600 +06 m=+3.199003110 The Black Soulston 2001 107 [Fiction Mystery] 3.5 1} 1 means true
+curl -i -d "$BODY" localhost:4000/v1/books
+
+BODY='{"title": "The Black Soulston", "published":2001,"pages":400, "genres":["Fiction", "Mystery"], "rating":3.5}'
+curl -X PUT -d  "$BODY" localhost:4000/v1/books/1
+
+All record:
+curl localhost:4000/v1/books
+curl localhost:4000/v1/books/1
+
+Delete:
+curl -X DELETE  localhost:4000/v1/books/1
 */
 import (
 	"fmt"
