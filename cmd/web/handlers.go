@@ -6,7 +6,8 @@ import (
 )
 
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "The home page")
+	
+	fmt.Fprintln(w, "</u></body></html>")
 }
 
 func (app *application) BookView(w http.ResponseWriter, r *http.Request) {
