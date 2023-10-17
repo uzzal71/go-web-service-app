@@ -57,7 +57,7 @@ func (m *ReadinglistModel) GetAll() (*[]Book, error) {
 	return booksResp.Books, nil
 }
 
-func (m *ReadinglistModel) Geet(id int64) (*Book, error) {
+func (m *ReadinglistModel) Get(id int64) (*Book, error) {
 	url := fmt.Sprintf("%s/%d", m.Endpoint, id)
 	resp, err := http.Get(url)
 	if err != nil {

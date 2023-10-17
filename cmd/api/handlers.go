@@ -114,6 +114,7 @@ func (app *application) getUpdateDeleteBooksHander(w http.ResponseWriter, r *htt
 			app.deleteBook(w, r)
 		default:
 			http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
+			return
 	}
 }
 
