@@ -30,3 +30,11 @@ type BooksResponse struct {
 type ReadinglistModel struct {
 	Endpoint string
 }
+
+func (m *ReadinglistModel) GetAll() (*[]Book, error) {
+	resp, err := http.Get(m.Endpoint)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+}
