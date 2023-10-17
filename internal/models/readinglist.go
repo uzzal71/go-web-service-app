@@ -24,7 +24,7 @@ type BookResponse struct {
 }
 
 type BooksResponse struct {
-	Book *[]Book `json:"books"`
+	Books *[]Book `json:"books"`
 }
 
 type ReadinglistModel struct {
@@ -47,7 +47,7 @@ func (m *ReadinglistModel) GetAll() (*[]Book, error) {
 		return nil, err
 	}
 
-	var bookResp BookResponse
+	var bookResp BooksResponse
 	err = json.Unmarshal(data, &booksResp)
 	if err != nil {
 		return nil, err
