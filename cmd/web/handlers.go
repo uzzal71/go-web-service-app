@@ -14,5 +14,5 @@ func (app *application) BookView(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) bookCreate(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "The home page")
+	fmt.Fprintln(w, "Create a new book record form")
 }
