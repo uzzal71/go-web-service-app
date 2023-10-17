@@ -7,5 +7,9 @@ import (
 )
 
 type application struct {
-	
+
+}
+
+func main() {
+	addr := flag.String("addr", ":80", "HTTP network address")
 }
