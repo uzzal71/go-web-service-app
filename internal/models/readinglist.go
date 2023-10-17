@@ -52,4 +52,6 @@ func (m *ReadinglistModel) GetAll() (*[]Book, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	return booksResp.Books, nil
 }
