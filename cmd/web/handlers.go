@@ -42,5 +42,12 @@ func (app *application) BookView(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) bookCreate(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "Create a new book record form")
+	switch r.Method {
+	case http.MethodGet:
+		app.bookCreateForm(w, r)
+	case http.MethodPut:
+		app.bookCreateProcess(w, r)
+	default:
+		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
+	}
 }
