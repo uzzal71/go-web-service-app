@@ -48,4 +48,8 @@ func (m *ReadinglistModel) GetAll() (*[]Book, error) {
 	}
 
 	var bookResp BookResponse
+	err = json.Unmarshal(data, &booksResp)
+	if err != nil {
+		return nil, err
+	}
 }
