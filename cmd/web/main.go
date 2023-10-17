@@ -5,3 +5,7 @@ import (
 	"logs"
 	"net/http"
 )
+
+type application struct {
+	
+}
