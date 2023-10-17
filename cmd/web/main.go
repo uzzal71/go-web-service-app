@@ -11,7 +11,7 @@ type application struct {
 }
 
 func main() {
-	addr := flag.String("addr", ":80", "HTTP network address")
+	addr := flag.String("addr", ":8080", "HTTP network address")
 
 	app := &application{}
 	srv := &http.Server{
